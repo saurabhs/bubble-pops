@@ -82,13 +82,12 @@ namespace BubblePops.UI
 
         public void UpdateFillbar(float fillAmount) 
         {
-            // _levelFiller.fillAmount = fillAmount;
             StartCoroutine(AnimateFillbar(fillAmount, 0.5f));
         }
 
         private IEnumerator AnimateFillbar(float fillAmount, float delay)
         {
-            if(fillAmount < 1f)
+            if(fillAmount <= 1f)
                 StartCoroutine(AnimateFillBarIncrement(fillAmount, fillBarFillSpeed / 10));
 
             yield return new WaitForSeconds(delay);
