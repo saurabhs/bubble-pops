@@ -40,6 +40,9 @@ namespace BubblePops.Core
         /// </summary>
         private HashSet<GameObject> _bubbles = new HashSet<GameObject>();
 
+
+        public GameObject[] BubblePrefab => _bubblesPrefab;
+
         public HashSet<GameObject> Bubbles => _bubbles;
 
         private void OnEnable()
