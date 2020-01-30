@@ -63,9 +63,15 @@ namespace BubblePops.Core
             var position = new Vector2((_offset.x * row) + offset, _offset.y * coloumn);
             var bubble = Instantiate(GetRandomBubble(), position, Quaternion.identity, _parent.transform);
             bubble.transform.localPosition = position;
-            bubble.name = $"{row}x{coloumn}";
+            bubble.name = $"Bubble|{row}x{coloumn}";
 
             return bubble;
+        }
+
+        public void CreateNewRow(int coloumn)
+        {
+            for (var i = 0; i < _rows; i++)
+                _bubbles.Add(CreateBubble(i, coloumn, coloumn % 2 == 1 ? _alternateOffset : 0));
         }
 
         private GameObject GetRandomBubble() => _bubblesPrefab[UnityEngine.Random.Range(0, _bubblesPrefab.Length / 2)];
