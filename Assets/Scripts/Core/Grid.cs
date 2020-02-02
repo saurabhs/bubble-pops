@@ -42,15 +42,11 @@ namespace BubblePops.Core
 
         public GameObject _prefab = null;
 
-        private void Awake() => Create();
+        public int Rows => _rows;
+        public int Coloumn => _coloumns;
+        public List<GameObject> GridData => _grid;
 
-        Dictionary<int, Color> _colors = new Dictionary<int, Color>()
-        {
-            { 0, Color.red },
-            { 1, Color.blue },
-            { 2, Color.green },
-            { 3, Color.yellow },
-        };
+        private void Awake() => Create();
 
         private void Create()
         {
