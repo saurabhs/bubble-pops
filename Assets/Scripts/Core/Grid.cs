@@ -54,53 +54,53 @@ namespace BubblePops.Core
 
         private void Create()
         {
-            for (var i = 0; i < _rows; i++)
+            for (var j = 0; j < _coloumns; j++)
             {
-                AddRow(i);
+                AddRow(j);
             }
         }
 
-        private void AddRow(int row)
+        private void AddRow(int coloumn)
         {
-            var color = _colors[Random.Range(0, _colors.Count)];
-            for (var j = 0; j < _coloumns; j++)
+            // var color = _colors[Random.Range(0, _colors.Count)];
+            for (var i = 0; i < _rows; i++)
             {
-                var x = _pivot.position.x + (_hexOffset.x * j);
-                var y = _pivot.position.y + (_offsetY * -row) + ((j % 2 == 1) ? _hexOffset.y : 0);
+                var x = _pivot.position.x + (_hexOffset.x * i);
+                var y = _pivot.position.y + (_offsetY * -coloumn) + ((i % 2 == 1) ? _hexOffset.y : 0);
 
                 var cell = Instantiate(_prefab, new Vector2(x, y), _prefab.transform.rotation, _parent);
-                cell.name = $"Cell_{row}_{j}";
+                cell.name = $"Cell_{i}_{coloumn}";
                 // cell.GetComponent<SpriteRenderer>().color = color;
                 _grid.Add(cell);
             }
         }
 
-        private void RemoveRow(int row)
+        private void RemoveRow(int coloumn)
         {
-            var toDelete = _grid.FindAll(ob => ob.name.Split('_')[1] == row.ToString());
+            var toDelete = _grid.FindAll(ob => ob.name.Split('_')[2] == coloumn.ToString());
             for(var i = 0; i < toDelete.Count; i++)
             {
                 _grid.Remove(toDelete[i]);
                 Destroy(toDelete[i]);
             }
 
-            MoveRowsUp(row + 1);
-            _rows--;
+            MoveRowsUp(coloumn + 1);
+            _coloumns--;
         }
 
-        private void MoveRowsUp(int row)
+        private void MoveRowsUp(int coloumn)
         {
-            var toMove = _grid.FindAll(obj => obj.name.Split('_')[1] == row.ToString());
+            var toMove = _grid.FindAll(obj => obj.name.Split('_')[2] == coloumn.ToString());
             if(toMove == null || toMove.Count == 0) return;
 
-            for(var j = 0; j < _coloumns; j++)
+            for(var i = 0; i < _rows; i++)
             {
-                var y = _pivot.position.y + (_offsetY * -row + _offsetY) + ((j % 2 == 1) ? _hexOffset.y : 0);
-                var pos = toMove[j].transform.position;
-                toMove[j].transform.position = new Vector2(pos.x, GetYPosition(row, j));
-                toMove[j].name = $"Cell_{row - 1}_{j}"; 
+                var y = _pivot.position.y + (_offsetY * -i + _offsetY) + ((coloumn % 2 == 1) ? _hexOffset.y : 0);
+                var pos = toMove[i].transform.position;
+                toMove[i].transform.position = new Vector2(pos.x, GetYPosition(coloumn, i));
+                toMove[i].name = $"Cell_{i}_{coloumn - 1}";
             }
-            MoveRowsUp(row + 1);
+            MoveRowsUp(coloumn + 1);
         }
 
         private float GetYPosition(int row, int coloumn) => _pivot.position.y + (_offsetY * -row + _offsetY) + ((coloumn % 2 == 1) ? _hexOffset.y : 0);
@@ -108,13 +108,13 @@ namespace BubblePops.Core
         [NaughtyAttributes.Button]
         public void Add()
         {
-            AddRow(_rows++);
+            AddRow(_coloumns++);
         }
 
         [NaughtyAttributes.Button]
         public void Remove()
         {
-            RemoveRow(2);
+            RemoveRow(0);
         }
     }
 }
