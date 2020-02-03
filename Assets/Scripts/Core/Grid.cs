@@ -28,7 +28,7 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
-        private List<GameObject> _grid = new List<GameObject>();
+        public List<GameObject> _grid = new List<GameObject>();
 
         /// <summary>
         /// 
@@ -42,6 +42,8 @@ namespace BubblePops.Core
 
         public GameObject _prefab = null;
 
+        public int _lowestColoumn = 0;
+
         public int Rows => _rows;
         public int Coloumn => _coloumns;
         public List<GameObject> GridData => _grid;
@@ -50,15 +52,15 @@ namespace BubblePops.Core
 
         private void Create()
         {
-            for (var j = 0; j < _coloumns; j++)
+            for(var j = 0; j < _coloumns + 1; j++)
             {
                 AddRow(j);
             }
         }
 
-        private void AddRow(int coloumn)
+        public void AddRow(int coloumn)
         {
-            for (var i = 0; i < _rows; i++)
+            for(var i = 0; i < _rows; i++)
             {
                 var x = _pivot.position.x + (_hexOffset.x * i);
                 var y = _pivot.position.y + (_offsetY * -coloumn) + ((i % 2 == 1) ? _hexOffset.y : 0);
@@ -67,6 +69,14 @@ namespace BubblePops.Core
                 cell.name = $"Cell_{i}_{coloumn}";
                 _grid.Add(cell);
             }
+
+            if(coloumn > _lowestColoumn)
+                _lowestColoumn = coloumn;
+        }
+
+        public void AddRow()
+        {
+            AddRow(++_coloumns);
         }
 
         private void RemoveRow(int coloumn)
@@ -79,13 +89,20 @@ namespace BubblePops.Core
             }
 
             MoveRowsUp(coloumn + 1);
+
+            if(_coloumns == _lowestColoumn)
+                _lowestColoumn--;
+
             _coloumns--;
         }
+
+        public void RemoveAtBottom() => RemoveRow(_coloumns);
 
         private void MoveRowsUp(int coloumn)
         {
             var toMove = _grid.FindAll(obj => obj.name.Split('_')[2] == coloumn.ToString());
-            if(toMove == null || toMove.Count == 0) return;
+            if(toMove == null || toMove.Count == 0)
+                return;
 
             for(var i = 0; i < _rows; i++)
             {
@@ -108,6 +125,7 @@ namespace BubblePops.Core
             }
         }
 
+#if UNITY_EDITOR
         [NaughtyAttributes.Button]
         public void Add()
         {
@@ -115,9 +133,27 @@ namespace BubblePops.Core
         }
 
         [NaughtyAttributes.Button]
+        public void AddAtBottom()
+        {
+            AddRow();
+        }
+
+        [NaughtyAttributes.Button]
         public void Remove()
         {
-            RemoveRow(0);
+            RemoveRow(_coloumns);
+        }
+
+        bool show = false;
+        [NaughtyAttributes.Button]
+        public void EnableHex()
+        {
+            show = !show;
+            foreach(var cell in _grid)
+            {
+                cell.GetComponent<SpriteRenderer>().enabled = show;
+            }
         }
     }
+#endif
 }

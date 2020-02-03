@@ -79,7 +79,7 @@ namespace BubblePops.Core
                 similarBubbles.Clear();
 
                 var prefab = Resources.Load($"Prefabs/Bubble{resultValue}") as GameObject;
-                var newBubble = Generator.CreateBubble(prefab, row, coloumn, _cell.gameObject.transform.position);
+                var newBubble = FindObjectOfType<Generator>().CreateBubble(prefab, row, coloumn, _cell.gameObject.transform.position);
                 newBubble.name = $"Bubble_{row}_{coloumn}";
 
                 _cell.bubble = newBubble.GetComponent<Bubble>();

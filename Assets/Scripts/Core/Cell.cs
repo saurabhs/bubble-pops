@@ -52,7 +52,7 @@ namespace BubblePops.Core
             };
             // print($"pre {gameObject.name} {_neighbours.Count}");
 
-            for (int i = _neighbours.Count - 1; i >= 0; i--)
+            for (var i = _neighbours.Count - 1; i >= 0; i--)
             {
                 if (_neighbours[i] == null || _neighbours[i].GetComponent<Cell>().bubble == null)
                     _neighbours.RemoveAt(i);
@@ -95,7 +95,6 @@ namespace BubblePops.Core
                 }
                 if (count == ceilingNeighbours.Count)
                 {
-                    print($"cell {gameObject.name}, bubble {bubble.name}, ceilingNeighbours {count}");
                     OnOrphan();
                 }
             }

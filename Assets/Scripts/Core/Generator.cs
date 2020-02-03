@@ -11,6 +11,9 @@ namespace BubblePops.Core
         /// </summary>
         [SerializeField] private GameObject[] _bubblesPrefab = null;
 
+        /// <summary>
+        /// 
+        /// </summary>
         [SerializeField] private Grid _grid = null;
 
         /// <summary>
@@ -18,9 +21,16 @@ namespace BubblePops.Core
         /// </summary>
         private HashSet<GameObject> _bubbles = new HashSet<GameObject>();
 
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[SerializeField] private int _lowestColoumn = 0;
+
         public GameObject[] BubblePrefab => _bubblesPrefab;
 
         public HashSet<GameObject> Bubbles => _bubbles;
+
+        //public int LowestColoumn => _lowestColoumn;
 
         private void Start() => Setup();
 
@@ -30,9 +40,9 @@ namespace BubblePops.Core
             var coloumns = _grid.Coloumn;
             var index = 0;
 
-            for (var j = 0; j < coloumns; j++)
+            for(var j = 0; j < coloumns; j++)
             {
-                for (var i = 0; i < rows; i++)
+                for(var i = 0; i < rows; i++)
                 {
                     var cell = _grid.GridData[index++].transform;
                     var bubble = CreateBubble(GetRandomBubble(), i, j, cell.position);
@@ -49,9 +59,9 @@ namespace BubblePops.Core
             var coloumns = _grid.Coloumn;
             var index = 0;
 
-            for (var j = 0; j < coloumns; j++)
+            for(var j = 0; j < coloumns; j++)
             {
-                for (var i = 0; i < rows; i++)
+                for(var i = 0; i < rows; i++)
                 {
                     var cell = _grid.GridData[index++].GetComponent<Cell>();
                     cell.SetNeighbours();
@@ -61,7 +71,7 @@ namespace BubblePops.Core
 
         public System.Collections.IEnumerator Reset()
         {
-            for (var i = _grid.GridData.Count - 1; i >= 0; i--)
+            for(var i = _grid.GridData.Count - 1; i >= 0; i--)
             {
                 var cell = _grid.GridData[i].GetComponent<Cell>();
                 if(cell.bubble == null)
@@ -76,7 +86,7 @@ namespace BubblePops.Core
             Setup();
         }
 
-        public static GameObject CreateBubble(GameObject prefab, int row, int coloumn, Vector2 position)
+        public GameObject CreateBubble(GameObject prefab, int row, int coloumn, Vector2 position)
         {
             var bubble = Instantiate(prefab, position, Quaternion.identity);
             bubble.name = $"Bubble_{row}_{coloumn}";
