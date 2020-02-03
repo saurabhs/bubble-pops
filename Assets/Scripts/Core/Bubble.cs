@@ -31,8 +31,16 @@ namespace BubblePops.Core
 
         private void Start()
         {
-            label.text = ((int)_value).ToString();
-            // label.fontSize = 0.35f;
+            var ss = gameObject.name.Split('_');
+            if(ss.Length < 2)
+                return;
+            var row = int.Parse(ss[1]);
+            var col = int.Parse(ss[2]);
+            var index = (col * 10) + row;
+            label.text = $"{(int)_value}\n{index}";
+            label.fontSize = 0.18f;
+
+            gameObject.name += $"_{index}";
         }
     }
 }

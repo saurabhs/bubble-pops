@@ -61,15 +61,17 @@ namespace BubblePops.Core
 
         public System.Collections.IEnumerator Reset()
         {
-            for (int i = _grid.GridData.Count - 1; i >= 0; i--)
+            for (var i = _grid.GridData.Count - 1; i >= 0; i--)
             {
                 var cell = _grid.GridData[i].GetComponent<Cell>();
+                if(cell.bubble == null)
+                    continue;
                 var rb = cell.bubble.gameObject.AddComponent<Rigidbody2D>();
                 rb.gravityScale = UnityEngine.Random.Range(0.5f, 2.5f);
                 Destroy(cell.bubble.gameObject, 3f);
             }
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.75f);
 
             Setup();
         }
@@ -81,6 +83,6 @@ namespace BubblePops.Core
             return bubble;
         }
 
-        private GameObject GetRandomBubble() => _bubblesPrefab[UnityEngine.Random.Range(0, _bubblesPrefab.Length / 2)];
+        public GameObject GetRandomBubble() => _bubblesPrefab[UnityEngine.Random.Range(0, 8)];
     }
 }
