@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 6952716555890950581, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
         type: 3}
       propertyPath: m_Name
-      value: Bubble256
+      value: Bubble2048
       objectReference: {fileID: 0}
     - target: {fileID: 6952716555890950587, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
         type: 3}
@@ -74,13 +74,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6952716555890950586, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
         type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6952716555890950586, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
+        type: 3}
       propertyPath: m_Color.b
-      value: 0.8377495
+      value: 0.25899887
       objectReference: {fileID: 0}
     - target: {fileID: 6952716555890950584, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
         type: 3}
       propertyPath: _value
-      value: 256
+      value: 2048
+      objectReference: {fileID: 0}
+    - target: {fileID: 7029220426340577805, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
+        type: 3}
+      propertyPath: m_text
+      value: 2048
+      objectReference: {fileID: 0}
+    - target: {fileID: 7029220426340577805, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7029220426340577805, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7029220426340577805, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92dd51c23c78b8d468a3503b37bf7ddb, type: 3}

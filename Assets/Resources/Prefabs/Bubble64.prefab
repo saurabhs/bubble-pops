@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 6952716555890950581, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
         type: 3}
       propertyPath: m_Name
-      value: Bubble128
+      value: Bubble64
       objectReference: {fileID: 0}
     - target: {fileID: 6952716555890950587, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
         type: 3}
@@ -69,18 +69,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6952716555890950586, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
         type: 3}
-      propertyPath: m_Color.g
-      value: 0.65632445
+      propertyPath: m_Color.b
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6952716555890950586, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
         type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.48567677
       objectReference: {fileID: 0}
     - target: {fileID: 6952716555890950584, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
         type: 3}
       propertyPath: _value
-      value: 128
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 7029220426340577805, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
+        type: 3}
+      propertyPath: m_text
+      value: '64
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7029220426340577805, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7029220426340577805, guid: 92dd51c23c78b8d468a3503b37bf7ddb,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 92dd51c23c78b8d468a3503b37bf7ddb, type: 3}
