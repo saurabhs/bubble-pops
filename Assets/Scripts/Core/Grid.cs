@@ -103,6 +103,7 @@ namespace BubblePops.Core
         {
             foreach(var cell in _grid)
             {
+                cell.GetComponent<Cell>().SetNeighbours();
                 cell.GetComponent<Cell>().RemoveOrphan();
             }
         }

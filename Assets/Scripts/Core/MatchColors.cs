@@ -18,14 +18,19 @@ namespace BubblePops.Core
 
         private void Awake() => _cell = GetComponent<Cell>();
 
-        private List<GameObject> GetMatchingNeighbours(Cell current, EType type)
+        private List<GameObject> GetMatchingNeighbours(Cell cell)
         {
             var similarBubbles = new List<GameObject>();
+            if(cell.bubble == null)
+                return similarBubbles;
+
+            var type = cell.bubble.Type;
+
             for (var i = 0; i < _neighbours.Count; i++)
             {
                 var temp = new List<GameObject>();
                 var neighbour = _neighbours[i].GetComponent<Cell>();
-                if (neighbour.bubble.Type == type)
+                if (neighbour.bubble != null && neighbour.bubble.Type == type)
                 {
                     similarBubbles.Add(neighbour.gameObject);
                     temp = neighbour.Neighbours;
@@ -49,7 +54,10 @@ namespace BubblePops.Core
         {
             var similarBubbles = OnMatchColours();
             if (similarBubbles.Count < 2)
+            {
+                FindObjectOfType<Grid>().UpdateGrid();
                 return;
+            }
 
             var resultValue = (int)_cell.bubble.Type * (int)Mathf.Pow(2, similarBubbles.Count - 1);
             if (resultValue >= (int)EType.TwentyFortyEight)
@@ -65,8 +73,8 @@ namespace BubblePops.Core
                 for (var i = 0; i < similarBubbles.Count; i++)
                 {
                     var cell = similarBubbles[i].GetComponent<Cell>();
-                    cell.Neighbours.Clear();
                     Destroy(cell.bubble.gameObject);
+                    cell.bubble = null;
                 }
                 similarBubbles.Clear();
 
@@ -86,10 +94,10 @@ namespace BubblePops.Core
         {
             _neighbours = new List<GameObject>();
             _neighbours.Add(_cell.gameObject);
-            for (int i = 0; i < _cell.Neighbours.Count; i++)
+            for (var i = 0; i < _cell.Neighbours.Count; i++)
                 _neighbours.Add(_cell.Neighbours[i]);
 
-            return GetMatchingNeighbours(_cell, _cell.bubble.Type);
+            return GetMatchingNeighbours(_cell);
         }
     }
 }

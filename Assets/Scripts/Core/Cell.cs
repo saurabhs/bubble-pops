@@ -26,7 +26,7 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
-        public List<GameObject> _neighbours = new List<GameObject>();
+        private List<GameObject> _neighbours = new List<GameObject>();
 
         /// <summary>
         /// 
@@ -35,12 +35,7 @@ namespace BubblePops.Core
 
         public List<GameObject> Neighbours => _neighbours;
 
-        private void Start()
-        {
-            SetNeighbours();
-        }
-
-        private void SetNeighbours()
+        public void SetNeighbours()
         {
             var name = gameObject.name;
             var x = Int32.Parse(name.Split('_')[1]);
@@ -55,22 +50,64 @@ namespace BubblePops.Core
                 GameObject.Find($"Cell_{x}_{y + 1}"),
                 GameObject.Find($"Cell_{x -1 }_{(x % 2 == 0 ? y + 1 : y)}")
             };
+            // print($"pre {gameObject.name} {_neighbours.Count}");
+
             for (int i = _neighbours.Count - 1; i >= 0; i--)
             {
-                if(_neighbours[i] == null)
+                if (_neighbours[i] == null || _neighbours[i].GetComponent<Cell>().bubble == null)
                     _neighbours.RemoveAt(i);
+            }
+
+            // print($"post {gameObject.name} {_neighbours.Count}");
+        }
+
+        public List<GameObject> ceilingNeighbours = new List<GameObject>();
+
+        [NaughtyAttributes.Button]
+        public void RemoveOrphan()
+        {
+            if(bubble == null)
+                return;
+
+            var name = gameObject.name;
+            var x = Int32.Parse(name.Split('_')[1]);
+            var y = Int32.Parse(name.Split('_')[2]);
+
+            if (y == 0)
+            {
+                if (_neighbours.Count == 0)
+                    OnOrphan();
+            }
+            else
+            {
+                ceilingNeighbours = new List<GameObject>()
+                {
+                    GameObject.Find($"Cell_{x - 1}_{(x % 2 == 0 ? y : y - 1)}"),
+                    GameObject.Find($"Cell_{x}_{y - 1}"),
+                    GameObject.Find($"Cell_{x + 1}_{(x % 2 == 0 ? y : y - 1)}"),
+                };
+
+                var count = 0;
+                foreach (var n in ceilingNeighbours)
+                {
+                    if (n == null || n.GetComponent<Cell>().bubble == null)
+                        count++;
+                }
+                if (count == ceilingNeighbours.Count)
+                {
+                    print($"cell {gameObject.name}, bubble {bubble.name}, ceilingNeighbours {count}");
+                    OnOrphan();
+                }
             }
         }
 
-        // public void OnPointerClick(PointerEventData eventData)
-        // {
-        //     SetNeighbours();
-
-        //     gameObject.GetComponent<SpriteRenderer>().color = Color.white;
-        //     foreach(var cell in _neighbours)
-        //     {
-        //         cell.GetComponent<SpriteRenderer>().color = Color.magenta;
-        //     }
-        // }
+        private void OnOrphan()
+        {
+            print($"{gameObject.name} -> {bubble.name} -> OnOrphan");
+            var rb = bubble.gameObject.AddComponent<Rigidbody2D>();
+            rb.gravityScale = UnityEngine.Random.Range(0.5f, 2.5f);
+            bubble = null;
+            Destroy(bubble, 3f);
+        }
     }
 }
