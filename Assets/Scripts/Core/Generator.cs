@@ -10,27 +10,7 @@ namespace BubblePops.Core
         /// </summary>
         [SerializeField] private GameObject[] _bubblesPrefab = null;
 
-        // /// <summary>
-        // /// max rows
-        // /// </summary>
-        // [SerializeField] private int _rows = 6;
-
-        // /// <summary>
-        // /// max coloumn
-        // /// </summary>
-        // [SerializeField] private int _coloumns = 4;
-
         [SerializeField] private Grid _grid = null;
-
-        // /// <summary>
-        // /// horizonatal and vertical offset for placing bubbles
-        // /// </summary>
-        // [SerializeField] private Vector2 _offset = new Vector2(0.83f, -0.7249f);
-
-        // /// <summary>
-        // /// offset for alternate rows
-        // /// </summary>
-        // [SerializeField] private float _alternateOffset = 0.4113f;
 
         /// <summary>
         /// list of generated bubbles
@@ -54,7 +34,8 @@ namespace BubblePops.Core
                 for (var i = 0; i < rows; i++)
                 {
                     var cell = _grid.GridData[index++].transform;
-                    var bubble = CreateBubble(i, j, cell.position, cell);
+                    var bubble = CreateBubble(i, j, cell.position, transform);
+                    cell.GetComponent<Cell>().bubble = bubble.GetComponent<Bubble>();
                 }
             }
         }

@@ -25,19 +25,15 @@ namespace BubblePops.Core
         /// </summary>
         [SerializeField] private BubblePops.Core.EType _value;
 
-        [SerializeField] private TextMeshProUGUI _label;
+        public BubblePops.Core.EType Type => _value;
 
-        private void Awake()
-        {
-            _label.text = ((int)_value).ToString();
-        }
+        public TextMeshProUGUI label = null;
 
-        private void OnEnable()
+        private void Start()
         {
-        }
-
-        private void OnDisable()
-        {
+            var ss = gameObject.name.Split('_');
+            label.text = $"{ss[1]},{ss[2]}";
+            label.fontSize = 0.2f;
         }
     }
 }

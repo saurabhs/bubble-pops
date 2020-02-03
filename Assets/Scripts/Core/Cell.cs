@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace BubblePops.Core
 {
-    public class Cell : MonoBehaviour, IPointerClickHandler
+    public class Cell : MonoBehaviour
     {
         /// <summary>
         /// 
@@ -21,26 +21,23 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
-        private GameObject go = null;
-
-        // [NaughtyAttributes.ReadOnly] public Vector2Int index = new Vector2Int(-1, -1);
+        public Bubble bubble = null;
 
         /// <summary>
         /// 
         /// </summary>
         public List<GameObject> _neighbours = new List<GameObject>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         public TextMeshProUGUI label = null;
 
-        // public static void Setup(int rows, int coloumn)
-        // {
-        //     _rows = rows;
-        //     _coloumns = coloumn;
-        // }
+        public List<GameObject> Neighbours => _neighbours;
 
         private void Start()
         {
-            label.text = $"{gameObject.name.Split('_')[1]},{gameObject.name.Split('_')[2]}";
+            SetNeighbours();
         }
 
         private void SetNeighbours()
@@ -65,15 +62,15 @@ namespace BubblePops.Core
             }
         }
 
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            SetNeighbours();
+        // public void OnPointerClick(PointerEventData eventData)
+        // {
+        //     SetNeighbours();
 
-            gameObject.GetComponent<SpriteRenderer>().color = Color.white;
-            foreach(var cell in _neighbours)
-            {
-                cell.GetComponent<SpriteRenderer>().color = Color.magenta;
-            }
-        }
+        //     gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+        //     foreach(var cell in _neighbours)
+        //     {
+        //         cell.GetComponent<SpriteRenderer>().color = Color.magenta;
+        //     }
+        // }
     }
 }
