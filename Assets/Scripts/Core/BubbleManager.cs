@@ -70,13 +70,14 @@ namespace BubblePops.Core
         {
             var prefabs = new List<GameObject>();
             var lowest = _grid.Coloumn;
-            foreach(var cell in _grid.GridData)
+            foreach(var grid in _grid.GridData)
             {
-                var col = int.Parse(cell.name.Split('_')[2]);
+                var col = int.Parse(grid.name.Split('_')[2]);
                 if(col == lowest - 1)
                 {
-
-                    prefabs.Add(cell.GetComponent<Cell>().bubble.gameObject);
+                    var cell = grid.GetComponent<Cell>();
+                    if(cell.bubble != null)
+                        prefabs.Add(grid.GetComponent<Cell>().bubble.gameObject);
                 }
             }
 

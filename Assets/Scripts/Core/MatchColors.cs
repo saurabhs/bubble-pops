@@ -50,7 +50,7 @@ namespace BubblePops.Core
             GroupBubbles();
         }
 
-        private void GroupBubbles()
+        public void GroupBubbles()
         {
             var similarBubbles = OnMatchColours();
             if (similarBubbles.Count < 2)

@@ -59,7 +59,7 @@ namespace BubblePops.Core
             var coloumns = _grid.Coloumn;
             var index = 0;
 
-            for(var j = 0; j < coloumns; j++)
+            for(var j = 0; j < coloumns + 1; j++)
             {
                 for(var i = 0; i < rows; i++)
                 {
