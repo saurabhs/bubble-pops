@@ -31,9 +31,8 @@ namespace BubblePops.Core
 
         private void Start()
         {
-            var ss = gameObject.name.Split('_');
-            label.text = $"{ss[1]},{ss[2]}";
-            label.fontSize = 0.2f;
+            label.text = ((int)_value).ToString();
+            // label.fontSize = 0.35f;
         }
     }
 }

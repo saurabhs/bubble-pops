@@ -34,15 +34,15 @@ namespace BubblePops.Core
                 for (var i = 0; i < rows; i++)
                 {
                     var cell = _grid.GridData[index++].transform;
-                    var bubble = CreateBubble(i, j, cell.position, transform);
+                    var bubble = CreateBubble(GetRandomBubble(), i, j, cell.position);
                     cell.GetComponent<Cell>().bubble = bubble.GetComponent<Bubble>();
                 }
             }
         }
 
-        private GameObject CreateBubble(int row, int coloumn, Vector2 position, Transform parent)
+        public static GameObject CreateBubble(GameObject prefab, int row, int coloumn, Vector2 position)
         {
-            var bubble = Instantiate(GetRandomBubble(), position, Quaternion.identity, parent);
+            var bubble = Instantiate(prefab, position, Quaternion.identity);
             bubble.name = $"Bubble_{row}_{coloumn}";
             return bubble;
         }
