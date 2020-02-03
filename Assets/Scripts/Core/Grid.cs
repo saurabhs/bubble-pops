@@ -28,7 +28,7 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
-        public List<GameObject> _grid = new List<GameObject>();
+        private List<GameObject> _grid = new List<GameObject>();
 
         /// <summary>
         /// 
@@ -58,7 +58,6 @@ namespace BubblePops.Core
 
         private void AddRow(int coloumn)
         {
-            // var color = _colors[Random.Range(0, _colors.Count)];
             for (var i = 0; i < _rows; i++)
             {
                 var x = _pivot.position.x + (_hexOffset.x * i);
@@ -66,7 +65,6 @@ namespace BubblePops.Core
 
                 var cell = Instantiate(_prefab, new Vector2(x, y), _prefab.transform.rotation, _parent);
                 cell.name = $"Cell_{i}_{coloumn}";
-                // cell.GetComponent<SpriteRenderer>().color = color;
                 _grid.Add(cell);
             }
         }
@@ -100,6 +98,14 @@ namespace BubblePops.Core
         }
 
         private float GetYPosition(int row, int coloumn) => _pivot.position.y + (_offsetY * -row + _offsetY) + ((coloumn % 2 == 1) ? _hexOffset.y : 0);
+
+        public void UpdateGrid()
+        {
+            foreach(var cell in _grid)
+            {
+                cell.GetComponent<Cell>().RemoveOrphan();
+            }
+        }
 
         [NaughtyAttributes.Button]
         public void Add()
