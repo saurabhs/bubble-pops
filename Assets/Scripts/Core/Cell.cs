@@ -39,15 +39,12 @@ namespace BubblePops.Core
                 GameObject.Find($"Cell_{x}_{y + 1}"),
                 GameObject.Find($"Cell_{x -1 }_{(x % 2 == 0 ? y + 1 : y)}")
             };
-            // print($"pre {gameObject.name} {_neighbours.Count}");
 
             for (var i = _neighbours.Count - 1; i >= 0; i--)
             {
                 if (_neighbours[i] == null) // || _neighbours[i].GetComponent<Cell>().bubble == null)
                     _neighbours.RemoveAt(i);
             }
-
-            // print($"post {gameObject.name} {_neighbours.Count}");
         }
 
         public List<GameObject> ceilingNeighbours = new List<GameObject>();
@@ -98,10 +95,6 @@ namespace BubblePops.Core
             Destroy(bubble, 3f);
         }
 
-        public void SetBubble(Bubble bubble)
-        {
-            this.bubble = bubble;
-            FindObjectOfType<Grid>().OnNewBubbleAdded(int.Parse(gameObject.name.Split('_')[2]));
-        }
+        public void SetBubble(Bubble bubble) => this.bubble = bubble;
     }
 }

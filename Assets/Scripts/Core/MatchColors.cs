@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -45,10 +46,12 @@ namespace BubblePops.Core
             return similarBubbles;
         }
 
+#if UNITY_EDITOR
         public void OnPointerClick(PointerEventData eventData)
         {
             GroupBubbles();
         }
+#endif
 
         public void GroupBubbles()
         {
@@ -73,10 +76,11 @@ namespace BubblePops.Core
                 for (var i = 0; i < similarBubbles.Count; i++)
                 {
                     var cell = similarBubbles[i].GetComponent<Cell>();
+                    //StartCoroutine(AnimateThenDestroy(cell));
+
                     Destroy(cell.bubble.gameObject);
                     cell.bubble = null;
                 }
-                similarBubbles.Clear();
 
                 var prefab = Resources.Load($"Prefabs/Bubble{resultValue}") as GameObject;
                 var newBubble = FindObjectOfType<Generator>().CreateBubble(prefab, row, coloumn, _cell.gameObject.transform.position);

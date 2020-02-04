@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace BubblePops.Core
@@ -21,16 +20,9 @@ namespace BubblePops.Core
         /// </summary>
         private HashSet<GameObject> _bubbles = new HashSet<GameObject>();
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //[SerializeField] private int _lowestColoumn = 0;
-
         public GameObject[] BubblePrefab => _bubblesPrefab;
 
         public HashSet<GameObject> Bubbles => _bubbles;
-
-        //public int LowestColoumn => _lowestColoumn;
 
         private void Start() => Setup();
 
@@ -47,24 +39,6 @@ namespace BubblePops.Core
                     var cell = _grid.GridData[index++].transform;
                     var bubble = CreateBubble(GetRandomBubble(), i, j, cell.position);
                     cell.GetComponent<Cell>().bubble = bubble.GetComponent<Bubble>();
-                }
-            }
-
-            PostSetup();
-        }
-
-        private void PostSetup()
-        {
-            var rows = _grid.Rows;
-            var coloumns = _grid.Coloumn;
-            var index = 0;
-
-            for(var j = 0; j < coloumns + 1; j++)
-            {
-                for(var i = 0; i < rows; i++)
-                {
-                    var cell = _grid.GridData[index++].GetComponent<Cell>();
-                    cell.SetNeighbours();
                 }
             }
         }

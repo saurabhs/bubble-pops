@@ -16,6 +16,11 @@ namespace BubblePops.Core
         [SerializeField] private int _coloumns = 4;
 
         /// <summary>
+        /// max coloumn
+        /// </summary>
+        [SerializeField] private int _maxColoumns = 10;
+
+        /// <summary>
         /// 
         /// </summary>
         [SerializeField] private Vector2 _hexOffset = new Vector2(0.5f, 0.5f);
@@ -42,23 +47,30 @@ namespace BubblePops.Core
 
         public GameObject _prefab = null;
 
-        public int _lowestColoumn = 0;
-
         public int Rows => _rows;
         public int Coloumn => _coloumns;
+        public int MaxColoumn => _maxColoumns;
         public List<GameObject> GridData => _grid;
 
         private void Awake() => Create();
 
         private void Create()
         {
-            for(var j = 0; j < _coloumns + 1; j++)
+            for(var j = 0; j < _maxColoumns + 1; j++)
             {
                 AddRow(j);
             }
+
+            PostCreate();
         }
 
-        public void AddRow(int coloumn)
+        private void PostCreate()
+        {
+            foreach(var cell in _grid)
+                cell.GetComponent<Cell>().SetNeighbours();
+        }
+
+        private void AddRow(int coloumn)
         {
             for(var i = 0; i < _rows; i++)
             {
@@ -69,15 +81,9 @@ namespace BubblePops.Core
                 cell.name = $"Cell_{i}_{coloumn}";
                 _grid.Add(cell);
             }
-
-            if(coloumn > _lowestColoumn)
-                _lowestColoumn = coloumn;
         }
 
-        public void AddRow()
-        {
-            AddRow(++_coloumns);
-        }
+        //private void AddRow() => AddRow(++_coloumns);
 
         private void RemoveRow(int coloumn)
         {
@@ -89,14 +95,8 @@ namespace BubblePops.Core
             }
 
             MoveRowsUp(coloumn + 1);
-
-            if(_coloumns == _lowestColoumn)
-                _lowestColoumn--;
-
             _coloumns--;
         }
-
-        public void RemoveAtBottom() => RemoveRow(_coloumns);
 
         private void MoveRowsUp(int coloumn)
         {
@@ -125,12 +125,6 @@ namespace BubblePops.Core
             }
         }
 
-        public void OnNewBubbleAdded(int col)
-        {
-            if(col == _lowestColoumn)
-                AddRow();
-        }
-
 #if UNITY_EDITOR
         [NaughtyAttributes.Button]
         public void Add()
@@ -138,11 +132,11 @@ namespace BubblePops.Core
             AddRow(_coloumns++);
         }
 
-        [NaughtyAttributes.Button]
-        public void AddAtBottom()
-        {
-            AddRow();
-        }
+        //[NaughtyAttributes.Button]
+        //public void AddAtBottom()
+        //{
+        //    AddRow();
+        //}
 
         [NaughtyAttributes.Button]
         public void Remove()
