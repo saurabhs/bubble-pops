@@ -11,10 +11,10 @@ namespace BubblePops.Core
         /// </summary>
         [SerializeField] private float _angle = 0f;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [SerializeField] private ContactFilter2D filter;
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //[SerializeField] private ContactFilter2D filter;
 
         /// <summary>
         /// 
@@ -74,7 +74,7 @@ namespace BubblePops.Core
                     _angle = _angleRange.y;
 
                 var result = new List<RaycastHit2D>();
-                var count = Physics2D.Raycast(_child.position, GetDirection(_angle), filter, result);
+                var count = Physics2D.Raycast(_child.position, GetDirection(_angle), new ContactFilter2D(), result);
 
                 if(count > 0)
                 {
@@ -83,7 +83,7 @@ namespace BubblePops.Core
                     _reflectQueue.Clear();
                     _reflectCell = null;
 
-                    var collider = result[result.Count - 1].collider;
+                    var collider = GetLastEmptyCell(result);
                     _masterCell = collider.gameObject.GetComponent<Cell>();
 
                     if(_masterCell != null)
@@ -95,14 +95,14 @@ namespace BubblePops.Core
                         _reflectQueue.Enqueue(_masterCell.transform);
 
                         var reflectResult = new List<RaycastHit2D>();
-                        var reflectCount = Physics2D.Raycast(_masterCell.transform.position, GetDirection(_angle > 0 ? _angle - 90 : _angle + 90), filter, reflectResult);
+                        var reflectCount = Physics2D.Raycast(_masterCell.transform.position, GetDirection(_angle > 0 ? _angle - 90 : _angle + 90), new ContactFilter2D(), reflectResult);
 
                         if(reflectCount > 0)
                         {
                             if(_reflectCell)
                                 _reflectCell.GhostSprite.SetActive(false);
 
-                            _reflectCell = reflectResult[reflectResult.Count - 1].collider.gameObject.GetComponent<Cell>();
+                            _reflectCell = GetLastEmptyCell(reflectResult).gameObject.GetComponent<Cell>();
 
                             _reflectCell.GhostSprite.SetActive(true);
                             _masterCell.GhostSprite.SetActive(false);
@@ -138,6 +138,20 @@ namespace BubblePops.Core
 
                 ClearHighlights();
             }
+        }
+
+        private Collider2D GetLastEmptyCell(List<RaycastHit2D> result)
+        {
+            var collider = result[0].collider;
+            for(var i = 0; i < result.Count; i++)
+            {
+                if(result[i].collider.gameObject.GetComponent<Cell>().BubbleObj == null)
+                    collider = result[i].collider;
+                else
+                    break;
+            }
+
+            return collider;
         }
 
         private void ClearHighlights()
