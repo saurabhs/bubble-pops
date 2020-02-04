@@ -18,18 +18,21 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
-        [SerializeField] private GameObject _nextBubble = null;
+        private GameObject _nextBubble = null;
 
         /// <summary>
         /// 
         /// </summary>
-        [SerializeField] private GameObject _laterBubble = null;
+        private GameObject _laterBubble = null;
 
         /// <summary>
         /// 
         /// </summary>
         private GameObject[] _bubblePrefabs = null;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Grid _grid = null;
 
         private void Awake()

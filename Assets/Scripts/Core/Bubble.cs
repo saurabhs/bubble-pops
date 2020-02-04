@@ -23,24 +23,24 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
-        [SerializeField] private BubblePops.Core.EType _value;
+        [SerializeField] private EType _value;
 
-        public BubblePops.Core.EType Type => _value;
+        public EType Type => _value;
 
         public TextMeshProUGUI label = null;
 
-        private void Start()
-        {
-            var ss = gameObject.name.Split('_');
-            if(ss.Length < 2)
-                return;
-            var row = int.Parse(ss[1]);
-            var col = int.Parse(ss[2]);
-            var index = (col * 10) + row;
-            label.text = $"{(int)_value}\n{index}";
-            label.fontSize = 0.18f;
+        private void Start() => label.text = $"{(int)_value}";
+        //{
+        //    var ss = gameObject.name.Split('_');
+        //    if(ss.Length < 2)
+        //        return;
+        //    var row = int.Parse(ss[1]);
+        //    var col = int.Parse(ss[2]);
+        //    var index = (col * 10) + row;
 
-            gameObject.name += $"_{index}";
-        }
+        //    label.fontSize = 0.18f;
+
+        //    gameObject.name += $"_{index}";
+        //}
     }
 }
