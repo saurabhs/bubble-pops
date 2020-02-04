@@ -22,20 +22,6 @@ namespace BubblePops.Core
 
         private Queue<Transform> _reflectQueue = new Queue<Transform>();
 
-        private void Update()
-        {
-            //transform.rotation = Quaternion.Euler(new Vector3(0, 0, -angle));
-            //var hit = Physics2D.Raycast(transform.position, Vector2.up);
-            Debug.DrawRay(transform.position, GetDirection(angle) * 1000, Color.magenta);
-
-            if(masterCell != null)
-            {
-                Debug.DrawRay(masterCell.transform.position, GetDirection(angle > 0 ? angle - 90 : angle + 90) * 1000, Color.green);
-            }
-        }
-
-        public Cell masterCell = null;
-        public Cell reflectCell = null;
 
         [NaughtyAttributes.Button]
         public void SetTarget()
@@ -43,12 +29,10 @@ namespace BubblePops.Core
             var result = new List<RaycastHit2D>();
             var count = Physics2D.Raycast(_child.position, GetDirection(angle), filter, result);
 
-            reflectCell = null;
-
             if(count > 0)
             {
                 var collider = result[result.Count - 1].collider;
-                masterCell = collider.gameObject.GetComponent<Cell>();
+                var masterCell = collider.gameObject.GetComponent<Cell>();
                 if(_reflectQueue.Count == 0 && masterCell.Neighbours[1].GetComponent<Cell>().BubbleObj != null)
                 {
                     Execute(masterCell.gameObject);
@@ -64,7 +48,7 @@ namespace BubblePops.Core
 
                     if(reflectCount > 0)
                     {
-                        reflectCell = reflectResult[reflectResult.Count - 1].collider.gameObject.GetComponent<Cell>();
+                        var reflectCell = reflectResult[reflectResult.Count - 1].collider.gameObject.GetComponent<Cell>();
                         _reflectQueue.Enqueue(reflectCell.transform);
 
                         if(reflectCell.Neighbours[1].GetComponent<Cell>().BubbleObj == null)
