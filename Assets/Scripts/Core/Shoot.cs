@@ -11,11 +11,6 @@ namespace BubblePops.Core
         /// </summary>
         [SerializeField] private float _angle = 0f;
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //[SerializeField] private ContactFilter2D filter;
-
         /// <summary>
         /// 
         /// </summary>
@@ -29,10 +24,10 @@ namespace BubblePops.Core
         [SerializeField, NaughtyAttributes.MinMaxSlider(-75, 75)]
         private Vector2 _angleRange = Vector2.zero;
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private LineRenderer _path;
+        /// <summary>
+        /// 
+        /// </summary>
+        [SerializeField] private LineRenderer _path;
 
         /// <summary>
         /// 
@@ -49,21 +44,8 @@ namespace BubblePops.Core
         /// </summary>
         private Vector3 _start = Vector2.zero;
 
-        private void Awake()
-        {
-            //_path = GetComponent<LineRenderer>();
-            //_path.positionCount = 3;
-        }
-
         private void Update()
         {
-#if UNITY_EDITOR
-            Debug.DrawRay(transform.position, GetDirection(_angle) * 1000, Color.magenta);
-
-            if(_masterCell != null)
-                Debug.DrawRay(_masterCell.transform.position, GetDirection(_angle > 0 ? _angle - 90 : _angle + 90) * 1000, Color.green);
-#endif
-
             if(Input.GetMouseButton(0))
             {
                 var drag = Input.mousePosition - _start;
@@ -88,7 +70,9 @@ namespace BubblePops.Core
 
                     if(_masterCell != null)
                         _masterCell.GhostSprite.SetActive(true);
-                    //_path.SetPosition(1, _masterCell.transform.position);
+
+                    _path.positionCount = 2;
+                    _path.SetPosition(1, _masterCell.transform.position);
 
                     if(_masterCell.Neighbours[1].GetComponent<Cell>().BubbleObj == null)
                     {
@@ -104,6 +88,9 @@ namespace BubblePops.Core
 
                             _reflectCell = GetLastEmptyCell(reflectResult).gameObject.GetComponent<Cell>();
 
+                            _path.positionCount = 3;
+                            _path.SetPosition(2, _reflectCell.transform.position);
+
                             _reflectCell.GhostSprite.SetActive(true);
                             _masterCell.GhostSprite.SetActive(false);
                         }
@@ -113,16 +100,15 @@ namespace BubblePops.Core
             if(Input.GetMouseButtonDown(0))
             {
                 _start = Input.mousePosition;
+                _path.SetPosition(0, transform.position);
             }
             else if(Input.GetMouseButtonUp(0))
             {
                 if(_reflectCell != null)
                 {
                     _reflectQueue.Enqueue(_reflectCell.transform);
-                    //_path.SetPosition(2, _reflectCell.transform.position);
                     if(_reflectCell.Neighbours[1].GetComponent<Cell>().BubbleObj == null)
                     {
-                        //_path.positionCount = 1;
                         _reflectQueue.Clear();
                     }
                 }
@@ -131,11 +117,12 @@ namespace BubblePops.Core
                 {
                     _child.GetComponent<Move>().Execute(_reflectQueue);
                 }
-                else if(_masterCell != null && /*_reflectQueue.Count == 0 &&*/ _masterCell.Neighbours[1].GetComponent<Cell>().BubbleObj != null)
+                else if(_masterCell != null && _masterCell.Neighbours[1].GetComponent<Cell>().BubbleObj != null)
                 {
                     Execute(_masterCell.gameObject);
                 }
 
+                _path.positionCount = 1;
                 ClearHighlights();
             }
         }
@@ -162,11 +149,7 @@ namespace BubblePops.Core
                 _reflectCell.GhostSprite.SetActive(false);
         }
 
-        public void SetChild(Transform child)
-        {
-            _child = child;
-            //_path.SetPosition(0, transform.position);
-        }
+        public void SetChild(Transform child) => _child = child;
 
         private Cell GetEmptyCellAbove(Cell cell)
         {
