@@ -21,16 +21,16 @@ namespace BubblePops.Core
         private List<GameObject> GetMatchingNeighbours(Cell cell)
         {
             var similarBubbles = new List<GameObject>();
-            if(cell.bubble == null)
+            if(cell.BubbleObj == null)
                 return similarBubbles;
 
-            var type = cell.bubble.Type;
+            var type = cell.BubbleObj.Type;
 
             for (var i = 0; i < _neighbours.Count; i++)
             {
                 var temp = new List<GameObject>();
                 var neighbour = _neighbours[i].GetComponent<Cell>();
-                if (neighbour.bubble != null && neighbour.bubble.Type == type)
+                if (neighbour.BubbleObj != null && neighbour.BubbleObj.Type == type)
                 {
                     similarBubbles.Add(neighbour.gameObject);
                     temp = neighbour.Neighbours;
@@ -61,14 +61,14 @@ namespace BubblePops.Core
                 return;
             }
 
-            var resultValue = (int)_cell.bubble.Type * (int)Mathf.Pow(2, similarBubbles.Count - 1);
+            var resultValue = (int)_cell.BubbleObj.Type * (int)Mathf.Pow(2, similarBubbles.Count - 1);
             if (resultValue >= (int)EType.TwentyFortyEight)
             {
                 StartCoroutine(FindObjectOfType<Generator>().Reset());
             }
             else
             {
-                var ss = _cell.bubble.name.Split('_');
+                var ss = _cell.BubbleObj.name.Split('_');
                 var row = int.Parse(ss[1]);
                 var coloumn = int.Parse(ss[2]);
 
@@ -77,15 +77,15 @@ namespace BubblePops.Core
                     var cell = similarBubbles[i].GetComponent<Cell>();
                     //StartCoroutine(AnimateThenDestroy(cell));
 
-                    Destroy(cell.bubble.gameObject);
-                    cell.bubble = null;
+                    Destroy(cell.BubbleObj.gameObject);
+                    cell.SetBubble(null);
                 }
 
                 var prefab = Resources.Load($"Prefabs/Bubble{resultValue}") as GameObject;
                 var newBubble = FindObjectOfType<Generator>().CreateBubble(prefab, row, coloumn, _cell.gameObject.transform.position);
                 newBubble.name = $"Bubble_{row}_{coloumn}";
 
-                _cell.bubble = newBubble.GetComponent<Bubble>();
+                _cell.SetBubble(newBubble.GetComponent<Bubble>());
                 _cell.SetNeighbours();
                 FindObjectOfType<Grid>().UpdateGrid();
                 

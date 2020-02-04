@@ -38,7 +38,7 @@ namespace BubblePops.Core
                 {
                     var cell = _grid.GridData[index++].transform;
                     var bubble = CreateBubble(GetRandomBubble(), i, j, cell.position);
-                    cell.GetComponent<Cell>().bubble = bubble.GetComponent<Bubble>();
+                    cell.GetComponent<Cell>().SetBubble(bubble.GetComponent<Bubble>());
                 }
             }
         }
@@ -48,10 +48,10 @@ namespace BubblePops.Core
             for(var i = _grid.GridData.Count - 1; i >= 0; i--)
             {
                 var cell = _grid.GridData[i].GetComponent<Cell>();
-                if(cell.bubble == null) continue;
-                var rb = cell.bubble.gameObject.AddComponent<Rigidbody2D>();
+                if(cell.BubbleObj == null) continue;
+                var rb = cell.BubbleObj.gameObject.AddComponent<Rigidbody2D>();
                 rb.gravityScale = Random.Range(0.5f, 2.5f);
-                Destroy(cell.bubble.gameObject, 3f);
+                Destroy(cell.BubbleObj.gameObject, 3f);
             }
 
             yield return new WaitForSeconds(0.75f);

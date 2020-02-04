@@ -10,17 +10,25 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
-        public Bubble bubble = null;
+        private Bubble bubble = null;
 
         /// <summary>
         /// 
         /// </summary>
-        private List<GameObject> _neighbours = new List<GameObject>();
+        [SerializeField] private List<GameObject> _neighbours = new List<GameObject>();
 
         /// <summary>
         /// 
         /// </summary>
         public TextMeshProUGUI label = null;
+
+        public Bubble BubbleObj => bubble;
+
+        private void Start()
+        {
+            var ss = gameObject.name.Split('_');
+            label.text = $"{int.Parse(ss[1])},{int.Parse(ss[2])}";
+        }
 
         public List<GameObject> Neighbours => _neighbours;
 
@@ -56,8 +64,8 @@ namespace BubblePops.Core
                 return;
 
             var name = gameObject.name;
-            var x = Int32.Parse(name.Split('_')[1]);
-            var y = Int32.Parse(name.Split('_')[2]);
+            var x = int.Parse(name.Split('_')[1]);
+            var y = int.Parse(name.Split('_')[2]);
 
             if (y == 0)
             {
@@ -88,13 +96,16 @@ namespace BubblePops.Core
 
         private void OnOrphan()
         {
-            print($"{gameObject.name} -> {bubble.name} -> OnOrphan");
             var rb = bubble.gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = UnityEngine.Random.Range(0.5f, 2.5f);
             bubble = null;
             Destroy(bubble, 3f);
         }
 
-        public void SetBubble(Bubble bubble) => this.bubble = bubble;
+        public void SetBubble(Bubble bubble)
+        {
+            this.bubble = bubble;
+            gameObject.layer = bubble == null ? LayerMask.NameToLayer("Empty") : LayerMask.NameToLayer("Occupied");
+        }
     }
 }

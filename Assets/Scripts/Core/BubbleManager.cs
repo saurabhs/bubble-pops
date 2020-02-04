@@ -51,14 +51,15 @@ namespace BubblePops.Core
         [NaughtyAttributes.Button]
         public void UpdateQueue()
         {
-            var generator = FindObjectOfType<Generator>();
             _nextBubble = _laterBubble == null ? GetRandomBubbleFromLastColoumn(_nextBubbleParent.transform) : _laterBubble;
             _nextBubble.transform.parent = _nextBubbleParent.transform;
             _nextBubble.transform.localPosition = Vector2.zero;
             _nextBubble.transform.localScale = Vector3.one;
-            _nextBubble.AddComponent<Shoot>();
+            _nextBubble.AddComponent<Move>();
 
             _laterBubble = GetRandomBubbleFromLastColoumn(_laterBubbleParent.transform);
+
+            _nextBubbleParent.GetComponent<Shoot>().SetChild(_nextBubble.transform);
         }
 
         private GameObject GetRandomBubble(GameObject prefab, Transform parent)
@@ -83,8 +84,8 @@ namespace BubblePops.Core
                     if(col == lowest - 1)
                     {
                         var cell = grid.GetComponent<Cell>();
-                        if(cell.bubble != null)
-                            prefabs.Add(grid.GetComponent<Cell>().bubble.gameObject);
+                        if(cell.BubbleObj != null)
+                            prefabs.Add(grid.GetComponent<Cell>().BubbleObj.gameObject);
                     }
                 }
                 isValid = prefabs.Count < 2;
