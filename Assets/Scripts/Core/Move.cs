@@ -15,9 +15,22 @@ namespace BubblePops.Core
         /// </summary>
         [SerializeField] private float _speed = 6f;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private Grid _grid = null;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         private Transform _target = null;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private Queue<Transform> _targets = new Queue<Transform>();
+
+        private void Awake() => _grid = FindObjectOfType<Grid>();
 
         public void Execute(GameObject target)
         {
@@ -68,13 +81,13 @@ namespace BubblePops.Core
             gameObject.name = $"Bubble_{row}_{col}";
             gameObject.transform.parent = null;
 
-            //Destroy(gameObject.GetComponent<Shoot>());
             Destroy(gameObject.GetComponent<Move>());
 
             FindObjectOfType<BubbleManager>().UpdateQueue();
 
-            _target.GetComponent<Cell>().SetBubble(gameObject.GetComponent<Bubble>());
-            _target.GetComponent<MatchColors>().GroupBubbles();
+            var cell = _target.GetComponent<Cell>();
+            cell.SetBubble(gameObject.GetComponent<Bubble>());
+            _grid.GetComponent<MatchColors>().GroupBubbles(cell);
         }
     }
 }

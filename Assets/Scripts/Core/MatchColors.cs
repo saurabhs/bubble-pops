@@ -1,22 +1,32 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace BubblePops.Core
 {
-    public class MatchColors : MonoBehaviour, IPointerClickHandler
+    public class On2048Reached : UnityEngine.Events.UnityEvent<int> { }
+    public class OnBubblesMatch : UnityEngine.Events.UnityEvent<int> { }
+
+    public class MatchColors : MonoBehaviour
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        private Cell _cell;
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //private Cell cell;
 
         /// <summary>
         /// 
         /// </summary>
         private List<GameObject> _neighbours = new List<GameObject>();
 
-        private void Awake() => _cell = GetComponent<Cell>();
+        /// <summary>
+        /// 
+        /// </summary>
+        public On2048Reached on2048Reached = new On2048Reached();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public OnBubblesMatch onBubblesMatch = new OnBubblesMatch();
 
         private List<GameObject> GetMatchingNeighbours(Cell cell)
         {
@@ -45,30 +55,26 @@ namespace BubblePops.Core
             return similarBubbles;
         }
 
-#if UNITY_EDITOR
-        public void OnPointerClick(PointerEventData eventData)
+        public void GroupBubbles(Cell current)
         {
-            GroupBubbles();
-        }
-#endif
-
-        public void GroupBubbles()
-        {
-            var similarBubbles = OnMatchColours();
+            var similarBubbles = OnMatchColours(current);
             if (similarBubbles.Count < 2)
             {
                 FindObjectOfType<Grid>().UpdateGrid();
                 return;
             }
 
-            var resultValue = (int)_cell.BubbleObj.Type * (int)Mathf.Pow(2, similarBubbles.Count - 1);
+            var resultValue = (int)current.BubbleObj.Type * (int)Mathf.Pow(2, similarBubbles.Count - 1);
             if (resultValue >= (int)EType.TwentyFortyEight)
             {
+                on2048Reached.Invoke(resultValue);
                 StartCoroutine(FindObjectOfType<Generator>().Reset());
             }
             else
             {
-                var ss = _cell.BubbleObj.name.Split('_');
+                onBubblesMatch.Invoke(resultValue);
+
+                var ss = current.BubbleObj.name.Split('_');
                 var row = int.Parse(ss[1]);
                 var coloumn = int.Parse(ss[2]);
 
@@ -82,25 +88,25 @@ namespace BubblePops.Core
                 }
 
                 var prefab = Resources.Load($"Prefabs/Bubble{resultValue}") as GameObject;
-                var newBubble = FindObjectOfType<Generator>().CreateBubble(prefab, row, coloumn, _cell.gameObject.transform.position);
+                var newBubble = FindObjectOfType<Generator>().CreateBubble(prefab, row, coloumn, current.gameObject.transform.position);
                 newBubble.name = $"Bubble_{row}_{coloumn}";
 
-                _cell.SetBubble(newBubble.GetComponent<Bubble>());
-                _cell.SetNeighbours();
+                current.SetBubble(newBubble.GetComponent<Bubble>());
+                current.SetNeighbours();
                 FindObjectOfType<Grid>().UpdateGrid();
                 
-                GroupBubbles();
+                GroupBubbles(current);
             }
         }
 
-        private List<GameObject> OnMatchColours()
+        private List<GameObject> OnMatchColours(Cell cell)
         {
             _neighbours = new List<GameObject>();
-            _neighbours.Add(_cell.gameObject);
-            for (var i = 0; i < _cell.Neighbours.Count; i++)
-                _neighbours.Add(_cell.Neighbours[i]);
+            _neighbours.Add(cell.gameObject);
+            for (var i = 0; i < cell.Neighbours.Count; i++)
+                _neighbours.Add(cell.Neighbours[i]);
 
-            return GetMatchingNeighbours(_cell);
+            return GetMatchingNeighbours(cell);
         }
     }
 }

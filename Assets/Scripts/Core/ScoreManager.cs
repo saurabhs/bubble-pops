@@ -49,6 +49,10 @@ namespace BubblePops.Core
             onFillBarUpdate = new OnFillBarUpdate();
 
             _score = GetNextLevelUp(_level - 1);
+
+            var matchColors = FindObjectOfType<MatchColors>();
+            matchColors.on2048Reached.AddListener(On2048Reached);
+            matchColors.onBubblesMatch.AddListener(OnBubblesMatch);
         }
 
         public void UpdateScore(int change)
@@ -79,7 +83,17 @@ namespace BubblePops.Core
 
         private int GetNextLevelUp(int currentLevel)
         {
-            return ((currentLevel + 1) * 1000);
+            return (((currentLevel + 1) * (currentLevel + 1)) * 256);
+        }
+
+        private void On2048Reached(int score)
+        {
+            UpdateScore(score * (_level * _level));
+        }
+
+        private void OnBubblesMatch(int score)
+        {
+            UpdateScore(score);
         }
 
         [NaughtyAttributes.Button]
