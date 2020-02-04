@@ -70,17 +70,24 @@ namespace BubblePops.Core
         {
             var prefabs = new List<GameObject>();
             var lowest = _grid.Coloumn;
-            foreach(var grid in _grid.GridData)
-            {
-                var col = int.Parse(grid.name.Split('_')[2]);
-                if(col == lowest - 1)
-                {
-                    var cell = grid.GetComponent<Cell>();
-                    if(cell.bubble != null)
-                        prefabs.Add(grid.GetComponent<Cell>().bubble.gameObject);
-                }
-            }
+            var isValid = true;
 
+            while(isValid)
+            {
+                foreach(var grid in _grid.GridData)
+                {
+                    var col = int.Parse(grid.name.Split('_')[2]);
+                    if(col == lowest - 1)
+                    {
+                        var cell = grid.GetComponent<Cell>();
+                        if(cell.bubble != null)
+                            prefabs.Add(grid.GetComponent<Cell>().bubble.gameObject);
+                    }
+                }
+                isValid = prefabs.Count < 2;
+                if(isValid)
+                    lowest--;
+            }
             return GetRandomBubble(prefabs[Random.Range(0, prefabs.Count)], parent);
         }
     }
