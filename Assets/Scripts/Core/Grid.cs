@@ -125,6 +125,12 @@ namespace BubblePops.Core
             }
         }
 
+        public void OnNewBubbleAdded(int col)
+        {
+            if(col == _lowestColoumn)
+                AddRow();
+        }
+
 #if UNITY_EDITOR
         [NaughtyAttributes.Button]
         public void Add()

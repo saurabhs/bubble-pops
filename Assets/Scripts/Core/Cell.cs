@@ -2,22 +2,11 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace BubblePops.Core
 {
     public class Cell : MonoBehaviour
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        private static int _rows = -1;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private static int _coloumns = -1;
-
         /// <summary>
         /// 
         /// </summary>
@@ -54,7 +43,7 @@ namespace BubblePops.Core
 
             for (var i = _neighbours.Count - 1; i >= 0; i--)
             {
-                if (_neighbours[i] == null || _neighbours[i].GetComponent<Cell>().bubble == null)
+                if (_neighbours[i] == null) // || _neighbours[i].GetComponent<Cell>().bubble == null)
                     _neighbours.RemoveAt(i);
             }
 
@@ -107,6 +96,12 @@ namespace BubblePops.Core
             rb.gravityScale = UnityEngine.Random.Range(0.5f, 2.5f);
             bubble = null;
             Destroy(bubble, 3f);
+        }
+
+        public void SetBubble(Bubble bubble)
+        {
+            this.bubble = bubble;
+            FindObjectOfType<Grid>().OnNewBubbleAdded(int.Parse(gameObject.name.Split('_')[2]));
         }
     }
 }

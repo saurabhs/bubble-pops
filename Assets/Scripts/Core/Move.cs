@@ -45,9 +45,8 @@ namespace BubblePops.Core
             Destroy(gameObject.GetComponent<Move>());
 
             FindObjectOfType<BubbleManager>().UpdateQueue();
-            FindObjectOfType<Grid>().AddRow();
 
-            _target.GetComponent<Cell>().bubble = gameObject.GetComponent<Bubble>();
+            _target.GetComponent<Cell>().SetBubble(gameObject.GetComponent<Bubble>());
             _target.GetComponent<MatchColors>().GroupBubbles();
         }
     }
