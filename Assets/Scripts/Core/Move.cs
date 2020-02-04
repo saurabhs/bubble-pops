@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace BubblePops.Core
 {
@@ -14,7 +15,9 @@ namespace BubblePops.Core
         /// </summary>
         [SerializeField] private float _speed = 6f;
 
-        private Transform _target;
+        private Transform _target = null;
+
+        private Queue<Transform> _targets = new Queue<Transform>();
 
         public void Execute(GameObject target)
         {
@@ -22,12 +25,33 @@ namespace BubblePops.Core
             InvokeRepeating("OnMove", 0, Time.deltaTime);
         }
 
+        public void Execute(Queue<Transform> targets)
+        {
+            _targets = targets;
+            SetTarget(_targets.Dequeue().transform);
+        }
+
+        private void SetTarget(Transform target)
+        {
+            _target = target;
+            InvokeRepeating("OnMove", 0, Time.deltaTime);
+        }
+
         private void OnMove()
         {
             transform.position = Vector2.MoveTowards(transform.position, _target.position, _speed * Time.deltaTime);
+
             if(Mathf.Abs(transform.position.y - _target.position.y) < 0.4f)
             {
                 OnMoveComplete();
+                if(_targets.Count > 0)
+                {
+                    SetTarget(_targets.Dequeue().transform);
+                }
+                else
+                {
+                    PostMoveCompelte();
+                }
             }
         }
 
@@ -35,13 +59,16 @@ namespace BubblePops.Core
         {
             CancelInvoke("OnMove");
             transform.position = _target.position;
+        }
 
+        private void PostMoveCompelte()
+        {
             var row = int.Parse(_target.name.Split('_')[1]);
             var col = int.Parse(_target.name.Split('_')[2]);
             gameObject.name = $"Bubble_{row}_{col}";
             gameObject.transform.parent = null;
 
-            Destroy(gameObject.GetComponent<Shoot>());
+            //Destroy(gameObject.GetComponent<Shoot>());
             Destroy(gameObject.GetComponent<Move>());
 
             FindObjectOfType<BubbleManager>().UpdateQueue();
