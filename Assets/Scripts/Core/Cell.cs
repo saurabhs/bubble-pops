@@ -15,6 +15,11 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
+        [SerializeField] private GameObject _ghostSprite = null;
+
+        /// <summary>
+        /// 
+        /// </summary>
         [SerializeField] private List<GameObject> _neighbours = new List<GameObject>();
 
         /// <summary>
@@ -23,6 +28,8 @@ namespace BubblePops.Core
         public TextMeshProUGUI label = null;
 
         public Bubble BubbleObj => bubble;
+
+        public GameObject GhostSprite => _ghostSprite;
 
         private void Start()
         {
