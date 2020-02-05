@@ -8,11 +8,6 @@ namespace BubblePops.Core
 
     public class MatchColors : MonoBehaviour
     {
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        //private Cell cell;
-
         /// <summary>
         /// 
         /// </summary>
@@ -65,6 +60,24 @@ namespace BubblePops.Core
             }
 
             var resultValue = (int)current.BubbleObj.Type * (int)Mathf.Pow(2, similarBubbles.Count - 1);
+            var bFound = false;
+            foreach(var bubbleGO in similarBubbles)
+            {
+                var cell = bubbleGO.GetComponent<Cell>();
+                foreach(var n in cell.Neighbours)
+                {
+                    var bubble = n.GetComponent<Cell>().BubbleObj;
+                    if(bubble && bubble.Type == (EType)resultValue)
+                    {
+                        current = cell;
+                        bFound = true;
+                        break;
+                    }
+                }
+                if(bFound)
+                    break;
+            }
+
             if (resultValue >= (int)EType.TwentyFortyEight)
             {
                 on2048Reached.Invoke(resultValue);
