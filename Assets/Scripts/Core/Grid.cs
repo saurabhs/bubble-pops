@@ -154,6 +154,6 @@ namespace BubblePops.Core
                 cell.GetComponent<SpriteRenderer>().enabled = show;
             }
         }
-    }
 #endif
+    }
 }
