@@ -83,7 +83,7 @@ namespace BubblePops.Core
 
         private int GetNextLevelUp(int currentLevel)
         {
-            return (((currentLevel + 1) * (currentLevel + 1)) * 256);
+            return (((currentLevel + 1) * (currentLevel + 1)) * 1024);
         }
 
         private void On2048Reached(int score)
