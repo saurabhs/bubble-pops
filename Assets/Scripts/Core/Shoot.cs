@@ -107,10 +107,18 @@ namespace BubblePops.Core
                 if(_reflectCell != null)
                 {
                     _reflectQueue.Enqueue(_reflectCell.transform);
-                    if(_reflectCell.Neighbours[1].GetComponent<Cell>().BubbleObj == null)
+                    var isOrpahn = true;
+                    foreach(var n in _reflectCell.Neighbours)
                     {
-                        _reflectQueue.Clear();
+                        if(n.GetComponent<Cell>().BubbleObj != null)
+                        {
+                            isOrpahn = false;
+                            break;
+                        }
                     }
+
+                    if(isOrpahn)
+                        _reflectQueue.Clear();
                 }
 
                 if(_reflectQueue.Count == 2)
