@@ -57,6 +57,8 @@ namespace BubblePops.Core
                 GameObject.Find($"Cell_{x -1 }_{(x % 2 == 0 ? y + 1 : y)}")
             };
 
+            _neighbours.Clear();
+
             foreach(var go in neighbours)
             {
                 if(go != null)
