@@ -24,7 +24,7 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
-        private List<GameObject> _ceilingNeighbours = new List<GameObject>();
+        private List<Cell> _ceilingNeighbours = new List<Cell>();
 
         /// <summary>
         /// 
@@ -76,30 +76,36 @@ namespace BubblePops.Core
             var x = int.Parse(name.Split('_')[1]);
             var y = int.Parse(name.Split('_')[2]);
 
-            if (y == 0)
+            if(y == 0)
             {
-                if (_neighbours.Count == 0)
+                if(_neighbours.Count == 0)
                     OnOrphan();
             }
             else
             {
-                _ceilingNeighbours = new List<GameObject>()
+                var ceilingNeighbours = new List<GameObject>()
                 {
                     GameObject.Find($"Cell_{x - 1}_{(x % 2 == 0 ? y : y - 1)}"),
                     GameObject.Find($"Cell_{x}_{y - 1}"),
                     GameObject.Find($"Cell_{x + 1}_{(x % 2 == 0 ? y : y - 1)}"),
                 };
 
+                _ceilingNeighbours.Clear();
                 var count = 0;
-                foreach (var n in _ceilingNeighbours)
+                foreach(var go in ceilingNeighbours)
                 {
-                    if (n == null || n.GetComponent<Cell>()._bubble == null)
-                        count++;
+                    if(go != null)
+                    {
+                        var cell = go.GetComponent<Cell>();
+
+                        _ceilingNeighbours.Add(cell);
+                        if(cell == null || cell._bubble == null)
+                            count++;
+                    }
                 }
-                if (count == _ceilingNeighbours.Count)
-                {
+
+                if(count == _ceilingNeighbours.Count)
                     OnOrphan();
-                }
             }
         }
 
@@ -107,13 +113,13 @@ namespace BubblePops.Core
         {
             var rb = _bubble.gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = Random.Range(0.5f, 2.5f);
-            _bubble = null;
             Destroy(_bubble, 3f);
+            _bubble = null;
         }
 
         public void SetBubble(Bubble bubble)
         {
-            this._bubble = bubble;
+            _bubble = bubble;
             gameObject.layer = bubble == null ? LayerMask.NameToLayer("Empty") : LayerMask.NameToLayer("Occupied");
         }
     }
