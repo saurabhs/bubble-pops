@@ -48,11 +48,10 @@ namespace BubblePops.Core
             for(var i = _grid.GridData.Count - 1; i >= 0; i--)
             {
                 var cell = _grid.GridData[i];
-                if(cell.BubbleObj == null)
-                    continue;
+                if(cell.BubbleObj == null) continue;
                 var rb = cell.BubbleObj.gameObject.AddComponent<Rigidbody2D>();
                 if(rb == null)
-                    cell.BubbleObj.gameObject.GetComponent<Rigidbody2D>();
+                    rb = cell.BubbleObj.gameObject.GetComponent<Rigidbody2D>();
                 rb.gravityScale = Random.Range(0.5f, 2.5f);
                 Destroy(cell.BubbleObj.gameObject, 3f);
             }

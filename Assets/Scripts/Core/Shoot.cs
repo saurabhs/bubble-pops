@@ -110,7 +110,7 @@ namespace BubblePops.Core
                     var isOrpahn = true;
                     foreach(var n in _reflectCell.Neighbours)
                     {
-                        if(n.GetComponent<Cell>().BubbleObj != null)
+                        if(n.BubbleObj != null)
                         {
                             isOrpahn = false;
                             break;

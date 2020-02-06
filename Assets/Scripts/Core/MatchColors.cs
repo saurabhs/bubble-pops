@@ -30,9 +30,9 @@ namespace BubblePops.Core
 
         private void Awake() => _grid = GetComponent<Grid>();
 
-        private List<GameObject> GetMatchingNeighbours(Cell cell)
+        private List<Cell> GetMatchingNeighbours(Cell cell)
         {
-            var similarBubbles = new List<GameObject>();
+            var similarBubbles = new List<Cell>();
             if(cell.BubbleObj == null)
                 return similarBubbles;
 
@@ -41,10 +41,10 @@ namespace BubblePops.Core
             for(var i = 0; i < _neighbours.Count; i++)
             {
                 var temp = new List<Cell>();
-                var neighbour = _neighbours[i].GetComponent<Cell>();
+                var neighbour = _neighbours[i];
                 if(neighbour.BubbleObj != null && neighbour.BubbleObj.Type == type)
                 {
-                    similarBubbles.Add(neighbour.gameObject);
+                    similarBubbles.Add(neighbour);
                     temp = neighbour.Neighbours;
                 }
 
@@ -68,12 +68,11 @@ namespace BubblePops.Core
 
             var resultValue = (int)current.BubbleObj.Type * (int)Mathf.Pow(2, similarBubbles.Count - 1);
             var bFound = false;
-            foreach(var go in similarBubbles)
+            foreach(var cell in similarBubbles)
             {
-                var cell = go.GetComponent<Cell>();
                 foreach(var n in cell.Neighbours)
                 {
-                    var bubble = n.GetComponent<Cell>().BubbleObj;
+                    var bubble = n.BubbleObj;
                     if(bubble && bubble.Type == (EType)resultValue)
                     {
                         current = cell;
@@ -100,7 +99,7 @@ namespace BubblePops.Core
 
                 for(var i = 0; i < similarBubbles.Count; i++)
                 {
-                    var cell = similarBubbles[i].GetComponent<Cell>();
+                    var cell = similarBubbles[i];
                     if(cell.BubbleObj != null)
                     { 
                         Destroy(cell.BubbleObj.gameObject);
@@ -114,11 +113,11 @@ namespace BubblePops.Core
             AddNewRowFromTop();
         }
 
-        private void AnimateBubbleMerge(List<GameObject> similarBubbles, Cell current)
+        private void AnimateBubbleMerge(List<Cell> similarBubbles, Cell current)
         {
             for(var i = 0; i < similarBubbles.Count; i++)
             {
-                var cell = similarBubbles[i].GetComponent<Cell>();
+                var cell = similarBubbles[i];
                 cell.SetBubble(null);
             }
         }
@@ -136,7 +135,7 @@ namespace BubblePops.Core
             GroupBubbles(current);
         }
 
-        private List<GameObject> OnMatchColours(Cell cell)
+        private List<Cell> OnMatchColours(Cell cell)
         {
             _neighbours = new List<Cell>() { cell };
             _neighbours.AddRange(cell.Neighbours);
