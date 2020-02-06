@@ -30,7 +30,16 @@ namespace BubblePops.Core
         /// </summary>
         private Queue<Transform> _targets = new Queue<Transform>();
 
-        private void Awake() => _grid = FindObjectOfType<Grid>();
+        /// <summary>
+        /// 
+        /// </summary>
+        private Generator _generator = null;
+
+        private void Awake()
+        {
+            _grid = FindObjectOfType<Grid>();
+            _generator = FindObjectOfType<Generator>();
+        }
 
         public void Execute(GameObject target)
         {
@@ -79,7 +88,7 @@ namespace BubblePops.Core
             var row = int.Parse(_target.name.Split('_')[1]);
             var col = int.Parse(_target.name.Split('_')[2]);
             gameObject.name = $"Bubble_{row}_{col}";
-            gameObject.transform.parent = null;
+            gameObject.transform.parent = _generator.transform;
 
             Destroy(gameObject.GetComponent<Move>());
 

@@ -37,7 +37,7 @@ namespace BubblePops.Core
                 for(var i = 0; i < rows; i++)
                 {
                     var cell = _grid.GridData[index++];
-                    var bubble = CreateBubble(GetRandomBubble(), i, j, cell.transform.position);
+                    var bubble = CreateBubble(GetRandomBubble(), i, j, cell.transform.position, transform);
                     cell.SetBubble(bubble.GetComponent<Bubble>());
                 }
             }
@@ -48,8 +48,11 @@ namespace BubblePops.Core
             for(var i = _grid.GridData.Count - 1; i >= 0; i--)
             {
                 var cell = _grid.GridData[i];
-                if(cell.BubbleObj == null) continue;
+                if(cell.BubbleObj == null)
+                    continue;
                 var rb = cell.BubbleObj.gameObject.AddComponent<Rigidbody2D>();
+                if(rb == null)
+                    cell.BubbleObj.gameObject.GetComponent<Rigidbody2D>();
                 rb.gravityScale = Random.Range(0.5f, 2.5f);
                 Destroy(cell.BubbleObj.gameObject, 3f);
             }
@@ -59,9 +62,9 @@ namespace BubblePops.Core
             Setup();
         }
 
-        public GameObject CreateBubble(GameObject prefab, int row, int coloumn, Vector2 position)
+        public GameObject CreateBubble(GameObject prefab, int row, int coloumn, Vector2 position, Transform parent)
         {
-            var bubble = Instantiate(prefab, position, Quaternion.identity);
+            var bubble = Instantiate(prefab, position, Quaternion.identity, parent);
             bubble.name = $"Bubble_{row}_{coloumn}";
             return bubble;
         }

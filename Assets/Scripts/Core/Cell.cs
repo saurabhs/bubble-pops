@@ -19,7 +19,12 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
-        [SerializeField] private List<GameObject> _neighbours = new List<GameObject>();
+        private List<Cell> _neighbours = new List<Cell>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<GameObject> _ceilingNeighbours = new List<GameObject>();
 
         /// <summary>
         /// 
@@ -27,8 +32,8 @@ namespace BubblePops.Core
         public TextMeshProUGUI label = null;
 
         public Bubble BubbleObj => _bubble;
-
         public GameObject GhostSprite => _ghostSprite;
+        public List<Cell> Neighbours => _neighbours;
 
         private void Start()
         {
@@ -36,15 +41,13 @@ namespace BubblePops.Core
             label.text = $"{int.Parse(ss[1])},{int.Parse(ss[2])}";
         }
 
-        public List<GameObject> Neighbours => _neighbours;
-
         public void SetNeighbours()
         {
             var name = gameObject.name;
             var x = int.Parse(name.Split('_')[1]);
             var y = int.Parse(name.Split('_')[2]);
 
-            _neighbours = new List<GameObject>()
+            var neighbours = new List<GameObject>()
             {
                 GameObject.Find($"Cell_{x - 1}_{(x % 2 == 0 ? y : y - 1)}"),
                 GameObject.Find($"Cell_{x}_{y - 1}"),
@@ -54,14 +57,12 @@ namespace BubblePops.Core
                 GameObject.Find($"Cell_{x -1 }_{(x % 2 == 0 ? y + 1 : y)}")
             };
 
-            for (var i = _neighbours.Count - 1; i >= 0; i--)
+            foreach(var go in neighbours)
             {
-                if (_neighbours[i] == null)
-                    _neighbours.RemoveAt(i);
+                if(go != null)
+                    _neighbours.Add(go.GetComponent<Cell>());
             }
         }
-
-        public List<GameObject> ceilingNeighbours = new List<GameObject>();
 
         [NaughtyAttributes.Button]
         public void RemoveOrphan()
@@ -80,7 +81,7 @@ namespace BubblePops.Core
             }
             else
             {
-                ceilingNeighbours = new List<GameObject>()
+                _ceilingNeighbours = new List<GameObject>()
                 {
                     GameObject.Find($"Cell_{x - 1}_{(x % 2 == 0 ? y : y - 1)}"),
                     GameObject.Find($"Cell_{x}_{y - 1}"),
@@ -88,12 +89,12 @@ namespace BubblePops.Core
                 };
 
                 var count = 0;
-                foreach (var n in ceilingNeighbours)
+                foreach (var n in _ceilingNeighbours)
                 {
                     if (n == null || n.GetComponent<Cell>()._bubble == null)
                         count++;
                 }
-                if (count == ceilingNeighbours.Count)
+                if (count == _ceilingNeighbours.Count)
                 {
                     OnOrphan();
                 }

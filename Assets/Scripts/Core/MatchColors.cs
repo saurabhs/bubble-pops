@@ -11,7 +11,7 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
-        private List<GameObject> _neighbours = new List<GameObject>();
+        private List<Cell> _neighbours = new List<Cell>();
 
         /// <summary>
         /// 
@@ -40,7 +40,7 @@ namespace BubblePops.Core
 
             for(var i = 0; i < _neighbours.Count; i++)
             {
-                var temp = new List<GameObject>();
+                var temp = new List<Cell>();
                 var neighbour = _neighbours[i].GetComponent<Cell>();
                 if(neighbour.BubbleObj != null && neighbour.BubbleObj.Type == type)
                 {
@@ -68,9 +68,9 @@ namespace BubblePops.Core
 
             var resultValue = (int)current.BubbleObj.Type * (int)Mathf.Pow(2, similarBubbles.Count - 1);
             var bFound = false;
-            foreach(var bubbleGO in similarBubbles)
+            foreach(var go in similarBubbles)
             {
-                var cell = bubbleGO.GetComponent<Cell>();
+                var cell = go.GetComponent<Cell>();
                 foreach(var n in cell.Neighbours)
                 {
                     var bubble = n.GetComponent<Cell>().BubbleObj;
@@ -101,10 +101,11 @@ namespace BubblePops.Core
                 for(var i = 0; i < similarBubbles.Count; i++)
                 {
                     var cell = similarBubbles[i].GetComponent<Cell>();
-                    //StartCoroutine(AnimateThenDestroy(cell));
-
-                    Destroy(cell.BubbleObj.gameObject);
-                    cell.SetBubble(null);
+                    if(cell.BubbleObj != null)
+                    { 
+                        Destroy(cell.BubbleObj.gameObject);
+                        cell.SetBubble(null);
+                    }
                 }
 
                 PostBubbleMergeAnimation(resultValue, row, coloumn, current);
@@ -118,8 +119,6 @@ namespace BubblePops.Core
             for(var i = 0; i < similarBubbles.Count; i++)
             {
                 var cell = similarBubbles[i].GetComponent<Cell>();
-
-                //Destroy(cell.BubbleObj.gameObject);
                 cell.SetBubble(null);
             }
         }
@@ -127,8 +126,8 @@ namespace BubblePops.Core
         private void PostBubbleMergeAnimation(int resultValue, int row, int coloumn, Cell current)
         {
             var prefab = Resources.Load($"Prefabs/Bubble{resultValue}") as GameObject;
-            var newBubble = FindObjectOfType<Generator>().CreateBubble(prefab, row, coloumn, current.gameObject.transform.position);
-            newBubble.name = $"Bubble_{row}_{coloumn}";
+            var generator = FindObjectOfType<Generator>();
+            var newBubble = generator.CreateBubble(prefab, row, coloumn, current.gameObject.transform.position, generator.transform);
 
             current.SetBubble(newBubble.GetComponent<Bubble>());
             current.SetNeighbours();
@@ -139,10 +138,8 @@ namespace BubblePops.Core
 
         private List<GameObject> OnMatchColours(Cell cell)
         {
-            _neighbours = new List<GameObject>();
-            _neighbours.Add(cell.gameObject);
-            for(var i = 0; i < cell.Neighbours.Count; i++)
-                _neighbours.Add(cell.Neighbours[i]);
+            _neighbours = new List<Cell>() { cell };
+            _neighbours.AddRange(cell.Neighbours);
 
             return GetMatchingNeighbours(cell);
         }
@@ -199,7 +196,7 @@ namespace BubblePops.Core
             for(var i = 0; i < _grid.Rows; i++)
             {
                 var cell = _grid.GridData[i];
-                var bubble = generator.CreateBubble(generator.GetRandomBubble(), i, 0, cell.transform.position);
+                var bubble = generator.CreateBubble(generator.GetRandomBubble(), i, 0, cell.transform.position, generator.transform);
                 cell.SetBubble(bubble.GetComponent<Bubble>());
             }
         }

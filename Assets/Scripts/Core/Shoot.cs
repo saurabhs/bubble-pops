@@ -74,7 +74,7 @@ namespace BubblePops.Core
                     _path.positionCount = 2;
                     _path.SetPosition(1, _masterCell.transform.position);
 
-                    if(_masterCell.Neighbours[1].GetComponent<Cell>().BubbleObj == null)
+                    if(_masterCell.Neighbours[1].BubbleObj == null)
                     {
                         _reflectQueue.Enqueue(_masterCell.transform);
 
@@ -125,7 +125,7 @@ namespace BubblePops.Core
                 {
                     _child.GetComponent<Move>().Execute(_reflectQueue);
                 }
-                else if(_masterCell != null && _masterCell.Neighbours[1].GetComponent<Cell>().BubbleObj != null)
+                else if(_masterCell != null && _masterCell.Neighbours[1].BubbleObj != null)
                 {
                     Execute(_masterCell.gameObject);
                 }
@@ -161,9 +161,9 @@ namespace BubblePops.Core
 
         private Cell GetEmptyCellAbove(Cell cell)
         {
-            if(cell != null && cell.BubbleObj == null && cell.Neighbours[1].GetComponent<Cell>().BubbleObj != null)
+            if(cell != null && cell.BubbleObj == null && cell.Neighbours[1].BubbleObj != null)
                 return cell;
-            return GetEmptyCellAbove(cell.Neighbours[1].GetComponent<Cell>());
+            return GetEmptyCellAbove(cell.Neighbours[1]);
         }
 
         private void Execute(GameObject target) => _child.gameObject.GetComponent<Move>().Execute(target);
