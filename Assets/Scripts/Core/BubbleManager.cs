@@ -78,14 +78,13 @@ namespace BubblePops.Core
 
             while(isValid)
             {
-                foreach(var grid in _grid.GridData)
+                foreach(var cell in _grid.GridData)
                 {
-                    var col = int.Parse(grid.name.Split('_')[2]);
+                    var col = int.Parse(cell.name.Split('_')[2]);
                     if(col == lowest - 1)
                     {
-                        var cell = grid.GetComponent<Cell>();
                         if(cell.BubbleObj != null)
-                            prefabs.Add(grid.GetComponent<Cell>().BubbleObj.gameObject);
+                            prefabs.Add(cell.BubbleObj.gameObject);
                     }
                 }
                 isValid = prefabs.Count < 2;

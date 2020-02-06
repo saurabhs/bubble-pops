@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
-        private Bubble bubble = null;
+        private Bubble _bubble = null;
 
         /// <summary>
         /// 
@@ -27,7 +26,7 @@ namespace BubblePops.Core
         /// </summary>
         public TextMeshProUGUI label = null;
 
-        public Bubble BubbleObj => bubble;
+        public Bubble BubbleObj => _bubble;
 
         public GameObject GhostSprite => _ghostSprite;
 
@@ -42,8 +41,8 @@ namespace BubblePops.Core
         public void SetNeighbours()
         {
             var name = gameObject.name;
-            var x = Int32.Parse(name.Split('_')[1]);
-            var y = Int32.Parse(name.Split('_')[2]);
+            var x = int.Parse(name.Split('_')[1]);
+            var y = int.Parse(name.Split('_')[2]);
 
             _neighbours = new List<GameObject>()
             {
@@ -57,7 +56,7 @@ namespace BubblePops.Core
 
             for (var i = _neighbours.Count - 1; i >= 0; i--)
             {
-                if (_neighbours[i] == null) // || _neighbours[i].GetComponent<Cell>().bubble == null)
+                if (_neighbours[i] == null)
                     _neighbours.RemoveAt(i);
             }
         }
@@ -67,7 +66,7 @@ namespace BubblePops.Core
         [NaughtyAttributes.Button]
         public void RemoveOrphan()
         {
-            if(bubble == null)
+            if(_bubble == null)
                 return;
 
             var name = gameObject.name;
@@ -91,7 +90,7 @@ namespace BubblePops.Core
                 var count = 0;
                 foreach (var n in ceilingNeighbours)
                 {
-                    if (n == null || n.GetComponent<Cell>().bubble == null)
+                    if (n == null || n.GetComponent<Cell>()._bubble == null)
                         count++;
                 }
                 if (count == ceilingNeighbours.Count)
@@ -103,15 +102,15 @@ namespace BubblePops.Core
 
         private void OnOrphan()
         {
-            var rb = bubble.gameObject.AddComponent<Rigidbody2D>();
-            rb.gravityScale = UnityEngine.Random.Range(0.5f, 2.5f);
-            bubble = null;
-            Destroy(bubble, 3f);
+            var rb = _bubble.gameObject.AddComponent<Rigidbody2D>();
+            rb.gravityScale = Random.Range(0.5f, 2.5f);
+            _bubble = null;
+            Destroy(_bubble, 3f);
         }
 
         public void SetBubble(Bubble bubble)
         {
-            this.bubble = bubble;
+            this._bubble = bubble;
             gameObject.layer = bubble == null ? LayerMask.NameToLayer("Empty") : LayerMask.NameToLayer("Occupied");
         }
     }

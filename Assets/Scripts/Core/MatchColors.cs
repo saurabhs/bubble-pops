@@ -159,7 +159,7 @@ namespace BubblePops.Core
                 var lastCount = bubblesCount;
                 for(var i = 0; i < _grid.Rows; i++)
                 {
-                    if(_grid.GridData[(j * _grid.Rows) + i].GetComponent<Cell>().BubbleObj != null)
+                    if(_grid.GridData[(j * _grid.Rows) + i].BubbleObj != null)
                         bubblesCount++;
                 }
                 if(bubblesCount > minCount)
@@ -181,11 +181,11 @@ namespace BubblePops.Core
             {
                 for(var i = 0; i < _grid.Rows; i++)
                 {
-                    var oldCell = _grid.GridData[((j - 1) * _grid.Rows) + i].GetComponent<Cell>();
+                    var oldCell = _grid.GridData[((j - 1) * _grid.Rows) + i];
                     if(oldCell.BubbleObj == null)
                         continue;
 
-                    var newCell = _grid.GridData[(j * _grid.Rows) + i].GetComponent<Cell>();
+                    var newCell = _grid.GridData[(j * _grid.Rows) + i];
                     var bubble = oldCell.BubbleObj;
                     bubble.name = oldCell.BubbleObj.name;
 
@@ -200,7 +200,7 @@ namespace BubblePops.Core
             {
                 var cell = _grid.GridData[i];
                 var bubble = generator.CreateBubble(generator.GetRandomBubble(), i, 0, cell.transform.position);
-                cell.GetComponent<Cell>().SetBubble(bubble.GetComponent<Bubble>());
+                cell.SetBubble(bubble.GetComponent<Bubble>());
             }
         }
     }

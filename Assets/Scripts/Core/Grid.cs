@@ -33,7 +33,7 @@ namespace BubblePops.Core
         /// <summary>
         /// 
         /// </summary>
-        public List<GameObject> _grid = new List<GameObject>();
+        public List<Cell> _grid = new List<Cell>();
 
         /// <summary>
         /// 
@@ -50,7 +50,7 @@ namespace BubblePops.Core
         public int Rows => _rows;
         public int Coloumn => _coloumns;
         public int MaxColoumn => _maxColoumns;
-        public List<GameObject> GridData => _grid;
+        public List<Cell> GridData => _grid;
 
         private void Awake() => Create();
 
@@ -67,7 +67,7 @@ namespace BubblePops.Core
         private void PostCreate()
         {
             foreach(var cell in _grid)
-                cell.GetComponent<Cell>().SetNeighbours();
+                cell.SetNeighbours();
         }
 
         private void AddRow(int coloumn)
@@ -79,11 +79,9 @@ namespace BubblePops.Core
 
                 var cell = Instantiate(_prefab, new Vector2(x, y), _prefab.transform.rotation, _parent);
                 cell.name = $"Cell_{i}_{coloumn}";
-                _grid.Add(cell);
+                _grid.Add(cell.GetComponent<Cell>());
             }
         }
-
-        //private void AddRow() => AddRow(++_coloumns);
 
         private void RemoveRow(int coloumn)
         {
@@ -120,8 +118,8 @@ namespace BubblePops.Core
         {
             foreach(var cell in _grid)
             {
-                cell.GetComponent<Cell>().SetNeighbours();
-                cell.GetComponent<Cell>().RemoveOrphan();
+                cell.SetNeighbours();
+                cell.RemoveOrphan();
             }
         }
 
@@ -131,12 +129,6 @@ namespace BubblePops.Core
         {
             AddRow(_coloumns++);
         }
-
-        //[NaughtyAttributes.Button]
-        //public void AddAtBottom()
-        //{
-        //    AddRow();
-        //}
 
         [NaughtyAttributes.Button]
         public void Remove()
